@@ -42,6 +42,9 @@ The pipeline follows a simple, step-by-step workflow: **Check incoming expenses 
 * **Sample run:** Runs through a batch of sample expenses to test both good inputs and invalid entries.
 * **Doesn't crash on errors:** If a bad test item fails validation, the system logs the error and safely moves on to the next test without crashing the program.
 
+### OUTPUT
+<img width="742" height="582" alt="Screenshot 2026-08-16 232349" src="https://github.com/user-attachments/assets/d367bbd9-bd45-473b-870b-67d754809211" />
+
 ---
 
 ## ⚡ Tech Stack & Core Concepts Demonstrated

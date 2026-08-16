@@ -10,41 +10,37 @@ As a self-taught aspiring data engineer operating under the moniker **Yanolitics
 
 ## 🗺️ High-Level Architecture
 
-The pipeline follows a modular ETL and analytics lifecycle (**Ingestion & Validation → In-Memory Storage → Case-Insensitive Aggregation → Visual Financial Output**) to ensure numeric accuracy and reporting integrity.
+The pipeline follows a simple, step-by-step workflow: **Check incoming expenses → Save valid entries → Calculate category totals → Print formatted financial reports.**
 
 ---
 
 ## 🛠️ Pipeline Breakdown
 
-### 1. Ingestion & Validation Layer
+### 1. Checking New Expenses (Validation)
 
-* **Purpose:** Accepts incoming transaction payloads (`amount`, `category`, `description`).
-* **Numeric Boundary Enforcement:** Evaluates transaction value to ensure it meets strict positive bounds (`amount > 0.0`).
-* **Exception Handling:** Explicitly raises a `ValueError` with detailed error messaging if non-positive or malformed amounts are submitted.
+* **What it does:** Receives new expense entries with an amount, category, and description.
+* **Safety check:** Ensures the expense amount is greater than $0.00. If someone tries to enter $0 or a negative number, the system catches it immediately and displays a clear error message instead of saving bad data.
 
-### 2. Persistence Layer (Storage Simulation)
+### 2. Saving Approved Entries (Storage)
 
-* **Purpose:** Acts as the primary ledger for all validated expense entries.
-* **Object Type:** In-memory list collection (`expenses`).
-* **Data Model:** Array of Dictionaries (JSON-like schema: `{"amount": float, "category": str, "description": str}`).
+* **What it does:** Acts as a temporary digital ledger (database) to store all validated expenses.
+* **How it's stored:** Organizes each expense into a simple record holding three clear fields: amount, category, and description.
 
-### 3. Aggregation & Analytics Layer
+### 3. Calculating Totals & Filtering (Analytics)
 
-* **Purpose:** Computes global financial metrics and filtered category rollups.
-* **Global Total Summation:** Uses a Pythonic generator expression within `sum()` for memory-efficient iteration over all recorded expense objects.
-* **Case-Insensitive Category Filtering:** Applies string normalization (`.lower()`) on both stored categories and query inputs, ensuring accurate financial rollups regardless of user casing variations (e.g., matching `"food"` with `"Food"`).
+* **Overall total:** Adds up every saved expense in one quick calculation to show total spending.
+* **Category totals:** Calculates total spending for specific categories (like "Food" or "Transport").
+* **Smart matching:** Ignores letter casing so searching for "food", "Food", or "FOOD" always returns the correct total.
 
-### 4. Display & Reporting Layer
+### 4. Displaying Clean Reports (Formatting)
 
-* **Purpose:** Formats raw ledger data into clean, readable financial logs.
-* **Currency Standardization:** Formats floating-point values into standard currency representations (`$XX.XX`).
-* **Sequential Line-Item Indexing:** Leverages `enumerate(..., start=1)` for clean 1-based terminal logging without manual counter variables.
+* **Dollar formatting:** Automatically formats numbers into standard currency values (like `$50.00` instead of `50.0`).
+* **Numbered lists:** Automatically numbers each stored expense (1, 2, 3...) when printing the final report to the screen.
 
-### 5. Resilient Test Runner
+### 5. Automated Testing (Test Runner)
 
-* **Purpose:** Executes automated test scenarios to verify both successful state changes and error handling.
-* **Fault-Tolerant Execution:** Encloses individual test operations inside localized `try...except` blocks within an iteration loop, allowing the test suite to log validation failures without terminating the entire pipeline execution.
-* **Module Execution Guard:** Uses the standard `if __name__ == "__main__":` entry point to ensure safe module imports and standalone execution.
+* **Sample run:** Runs through a batch of sample expenses to test both good inputs and invalid entries.
+* **Doesn't crash on errors:** If a bad test item fails validation, the system logs the error and safely moves on to the next test without crashing the program.
 
 ---
 
